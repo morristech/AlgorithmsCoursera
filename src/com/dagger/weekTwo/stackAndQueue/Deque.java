@@ -1,4 +1,4 @@
-package com.dagger.weekTwo;
+package com.dagger.weekTwo.stackAndQueue;
 
 import edu.princeton.cs.algs4.StdOut;
 
