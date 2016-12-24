@@ -3,6 +3,7 @@ package com.dagger.weekTwo.stackAndQueue;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Harshit on 22/12/16.
@@ -29,7 +30,15 @@ public class Deque<Item> implements Iterable<Item> {
             }
 
             @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Operation not permitted");
+            }
+
+            @Override
             public Item next() {
+                if(current == null){
+                    throw new NoSuchElementException("Reached the end of the queue");
+                }
                 Item item = current.item;
                 current = current.next;
                 return item;
@@ -51,6 +60,8 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addFirst(Item i){
+        if (i == null)
+            throw new NullPointerException("Can't enter null element to the queue");
         Node newNode = new Node(i);
         newNode.next = first;
         first = newNode;
@@ -58,6 +69,8 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addLast(Item i){
+        if (i == null)
+            throw new NullPointerException("Can't enter null element to the queue");
         if(last == null){
             Node newNode = new Node(i);
             first.next = newNode;
@@ -73,7 +86,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     public Item removeFirst() {
         if(n == 0){
-            return null;
+            throw new NoSuchElementException("Queue is empty");
         }
         Item firstItem = first.item;
         first = first.next;
@@ -83,7 +96,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     public Item removeLast(){
         if(n == 0)
-            return null;
+            throw new NoSuchElementException("Queue is empty");
         else if (n == 1){
             Item item = first.item;
             first = null;
@@ -107,13 +120,6 @@ public class Deque<Item> implements Iterable<Item> {
         return n;
     }
 
-    public void print(){
-        Node test = first;
-        while(test != null){
-            StdOut.print(test.item);
-            test = test.next;
-        }
-    }
 
     public static void main(String[] args) {
         Deque<Integer> deque = new Deque<>();
@@ -138,7 +144,6 @@ public class Deque<Item> implements Iterable<Item> {
         while (iterator.hasNext()){
             StdOut.println(iterator.next());
         }
-        deque.print();
     }
 
 }

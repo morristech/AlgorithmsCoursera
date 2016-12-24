@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Harshit on 23/12/16.
@@ -26,6 +27,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item){
+        if (item == null)
+            throw new NullPointerException("Can't enter null element to the queue");
         array[curr] = item;
         curr++;
         if(curr >= array.length){
@@ -38,11 +41,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         for (int i = 0; i < length ; i++){
             temp[i] = array[i];
         }
-        array = temp;
-        StdOut.println("Resized");
+        array = temp;//        StdOut.println("Resized");
+    }
+
+    public Item sample(){
+        if (curr == 0)
+            throw new NoSuchElementException("Queue is empty");
+        StdRandom.shuffle(array,0,curr-1);
+        return array[0];
     }
 
     public Item dequeue(){
+        if (curr == 0){
+            throw new NoSuchElementException("Queue is empty");
+        }
         int position = StdRandom.uniform(0,curr);
         Item removedItem = array[position];
         array[position] = null;
@@ -50,7 +62,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             array[i] = array[i + 1];
         }
         curr--;
-        StdOut.println("Removed item is " + removedItem);
         return removedItem;
     }
 
@@ -69,8 +80,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             }
 
             @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Operation not permitted");
+            }
+
+            @Override
             public Item next() {
-                return array[i++];
+                if(i < curr)
+                    return array[i++];
+                else
+                    throw new NoSuchElementException("Reached the end of the queue");
             }
         };
     }
@@ -85,6 +104,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         randomizedQueue.dequeue();
         randomizedQueue.dequeue();
         randomizedQueue.dequeue();
+        StdOut.println("Size of the queue is " + randomizedQueue.size());
         Iterator<Integer> iterator = randomizedQueue.iterator();
         while (iterator.hasNext()) {
             StdOut.println(iterator.next());
