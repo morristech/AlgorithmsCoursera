@@ -11,18 +11,22 @@ import java.util.Iterator;
 public class Subset {
 
     public static void main(String[] args) {
-        int k = StdIn.readInt();
-        int N = StdIn.readInt();
-        RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
         int i = 0;
-        while (i < N){
-            randomizedQueue.enqueue(StdIn.readString());
-            i++;
-        }
-        i = 0;
+
+        RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
+
+        String in = StdIn.readString();
+
+        String[] arr = in.split(" ");
+
+        while (i < arr.length)
+            randomizedQueue.enqueue(arr[i++]);
 
         Iterator<String> iterator = randomizedQueue.iterator();
-        while (i < k){
+
+        int k = Integer.parseInt(args[0]);
+
+        while (i <= k) {
             i++;
             StdOut.println(iterator.next());
         }

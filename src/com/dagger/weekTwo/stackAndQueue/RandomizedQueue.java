@@ -9,70 +9,81 @@ import java.util.NoSuchElementException;
 /**
  * Created by Harshit on 23/12/16.
  */
+
+@SuppressWarnings("unchecked")
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    int curr = 0;
+    private int curr = 0;
     private Item[] array;
 
     public RandomizedQueue() {
         array = (Item[]) new Object[2];
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return curr == 0;
     }
 
-    public int size(){
+    public int size() {
         return curr;
     }
 
-    public void enqueue(Item item){
+    public void enqueue(Item item) {
         if (item == null)
             throw new NullPointerException("Can't enter null element to the queue");
         array[curr] = item;
         curr++;
-        if(curr >= array.length){
+        if (curr >= array.length) {
             resize(array.length);
         }
     }
 
     private void resize(int length) {
         Item[] temp = (Item[]) new Object[2 * length];
-        for (int i = 0; i < length ; i++){
-            temp[i] = array[i];
-        }
-        array = temp;//        StdOut.println("Resized");
+        System.arraycopy(array, 0, temp, 0, length);
+        array = temp;
     }
 
-    public Item sample(){
+    public Item sample() {
         if (curr == 0)
             throw new NoSuchElementException("Queue is empty");
-        StdRandom.shuffle(array,0,curr-1);
+        StdRandom.shuffle(array, 0, curr - 1);
         return array[0];
     }
 
-    public Item dequeue(){
-        if (curr == 0){
+    public Item dequeue() {
+        if (curr == 0) {
             throw new NoSuchElementException("Queue is empty");
         }
-        int position = StdRandom.uniform(0,curr);
+        int position = StdRandom.uniform(0, curr);
         Item removedItem = array[position];
         array[position] = null;
-        for(int i = position;i < curr - 1;i++){
+        for (int i = position; i < curr - 1; i++) {
             array[i] = array[i + 1];
         }
+        if (curr < array.length / 4)
+            shrink();
         curr--;
         return removedItem;
+    }
+
+    private void shrink() {
+        Item[] testArray = (Item[]) new Object[array.length / 2];
+        System.arraycopy(array, 0, testArray, 0, curr);
+        array = testArray;
     }
 
     @Override
     public Iterator<Item> iterator() {
 
-        StdRandom.shuffle(array,0,curr-1);
+        Item[] temp = array;
+
+        if (curr > 1)
+            StdRandom.shuffle(temp, 0, curr - 1);
 
         return new Iterator<Item>() {
 
-            int i = 0;
+            private int i = 0;
 
             @Override
             public boolean hasNext() {
@@ -86,8 +97,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             @Override
             public Item next() {
-                if(i < curr)
-                    return array[i++];
+                if (i < curr)
+                    return temp[i++];
                 else
                     throw new NoSuchElementException("Reached the end of the queue");
             }
@@ -95,19 +106,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomizedQueue<Integer> randomizedQueue = new RandomizedQueue<>();
-        randomizedQueue.enqueue(5);
-        randomizedQueue.enqueue(6);
-        randomizedQueue.enqueue(8);
-        randomizedQueue.enqueue(10);
-        randomizedQueue.enqueue(11);
-        randomizedQueue.dequeue();
-        randomizedQueue.dequeue();
-        randomizedQueue.dequeue();
-        StdOut.println("Size of the queue is " + randomizedQueue.size());
-        Iterator<Integer> iterator = randomizedQueue.iterator();
-        while (iterator.hasNext()) {
-            StdOut.println(iterator.next());
+        RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
+        randomizedQueue.enqueue("H");
+        randomizedQueue.enqueue("K");
+        randomizedQueue.enqueue("L");
+        randomizedQueue.enqueue("P");
+        randomizedQueue.enqueue("D");
+        randomizedQueue.enqueue("O");
+        Iterator<String> iterator2 = randomizedQueue.iterator();
+
+        while (iterator2.hasNext()) {
+            StdOut.println("I2 " + iterator2.next());
         }
     }
 }
