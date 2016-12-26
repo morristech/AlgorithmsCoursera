@@ -2,8 +2,11 @@ package com.dagger.weekTwo.stackAndQueue;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * Created by Harshit on 24/12/16.
@@ -15,20 +18,19 @@ public class Subset {
 
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
 
-        String in = StdIn.readString();
+        while(!StdIn.isEmpty()){
+            randomizedQueue.enqueue(StdIn.readString());
 
-        String[] arr = in.split(" ");
+        }
 
-        while (i < arr.length)
-            randomizedQueue.enqueue(arr[i++]);
 
         Iterator<String> iterator = randomizedQueue.iterator();
 
         int k = Integer.parseInt(args[0]);
 
-        while (i <= k) {
-            i++;
+        while (i < k) {
             StdOut.println(iterator.next());
+            i++;
         }
     }
 

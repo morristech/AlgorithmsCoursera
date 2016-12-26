@@ -58,9 +58,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int position = StdRandom.uniform(0, curr);
         Item removedItem = array[position];
         array[position] = null;
-        for (int i = position; i < curr - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, position + 1, array, position, curr - 1 - position);
         if (curr < array.length / 4)
             shrink();
         curr--;
@@ -76,33 +74,38 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     @Override
     public Iterator<Item> iterator() {
 
-        Item[] temp = array;
+        return new RandomizedIterator();
 
-        if (curr > 1)
-            StdRandom.shuffle(temp, 0, curr - 1);
+    }
 
-        return new Iterator<Item>() {
+    private class RandomizedIterator implements Iterator<Item>{
 
-            private int i = 0;
+        private int i = 0;
+        Item[] temp;
 
-            @Override
-            public boolean hasNext() {
-                return i < curr;
-            }
+        RandomizedIterator() {
+            temp = array;
+            if (curr > 1)
+                StdRandom.shuffle(temp, 0, curr - 1);
+        }
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("Operation not permitted");
-            }
+        @Override
+        public boolean hasNext() {
+            return i < curr;
+        }
 
-            @Override
-            public Item next() {
-                if (i < curr)
-                    return temp[i++];
-                else
-                    throw new NoSuchElementException("Reached the end of the queue");
-            }
-        };
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Operation not permitted");
+        }
+
+        @Override
+        public Item next() {
+            if (i < curr)
+                return temp[i++];
+            else
+                throw new NoSuchElementException("Reached the end of the queue");
+        }
     }
 
     public static void main(String[] args) {
@@ -114,6 +117,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         randomizedQueue.enqueue("D");
         randomizedQueue.enqueue("O");
         Iterator<String> iterator2 = randomizedQueue.iterator();
+        Iterator<String> iterator1 = randomizedQueue.iterator();
+
+        while (iterator1.hasNext()) {
+            StdOut.println("I1 " + iterator1.next());
+        }
 
         while (iterator2.hasNext()) {
             StdOut.println("I2 " + iterator2.next());
